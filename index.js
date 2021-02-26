@@ -91,8 +91,8 @@ var module = (function() {
         clear: function(sbml_id) {
             if (sbml_id) {
                 view.object(_id).action("load", {
-                    "text":"",
-                    "sbml_id": sbml_id
+                    "text":"=begin blank\n=end blank",
+                    "sbml-id": sbml_id
                 })
             } else {
                 view.object(_id).action("clear");
