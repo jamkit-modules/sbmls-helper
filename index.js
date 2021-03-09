@@ -59,9 +59,13 @@ var module = (function() {
 
                     view.object(_id).action("clear");
                     blocks.forEach(function([ block, attrs ]) {
-                        var text = "=import " + sbss + "\n" + block
-                        var sbml_id = attrs["sbml-id"]
-                
+                        var text = "=import " + sbss + "\n" + block;
+                        var sbml_id = attrs["sbml-id"];
+
+                        if (attrs["hides-when-loaded"] === "yes") {
+                            text = "=begin blank\n=end blank";
+                        }
+
                         view.object(_id).action("load", Object.assign(data || {}, {
                             "text": text,
                             "sbml-id": sbml_id || ""
@@ -74,6 +78,27 @@ var module = (function() {
 
                     _filename = filename;
                 });
+        },
+
+        show: function(sbml_id) {
+            if (_blocks.hasOwnProperty(sbml_id)) {
+                var sbss = _filename.replace(".sbml", ".sbss");
+                var text = "=import " + sbss + "\n" + _blocks[sbml_id]
+    
+                view.object(_id).action("load", {
+                    "text": text,
+                    "sbml-id": sbml_id
+                });
+            }
+        },
+
+        hide: function(sbml_id) {
+            if (_blocks.hasOwnProperty(sbml_id)) {
+                view.object(_id).action("load", {
+                    "text":"=begin blank\n=end blank",
+                    "sbml-id": sbml_id
+                })
+            }
         },
 
         update: function(sbml_id, data) {
